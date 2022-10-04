@@ -1,10 +1,9 @@
 package collinear;
 
 import edu.princeton.cs.algs4.StdDraw;
-
 import java.util.Comparator;
 
-public class Point {
+public class Point implements Comparable<Point> {
     private final int x;     // x-coordinate of this point
     private final int y;     // y-coordinate of this point
 
@@ -51,7 +50,12 @@ public class Point {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        /* YOUR CODE HERE */
+        int yDiff = that.y - y;
+        int xDiff = that.x - x;
+        if (yDiff == 0 && xDiff == 0) return Double.NEGATIVE_INFINITY;
+        if (xDiff == 0) return Double.POSITIVE_INFINITY;
+        if (yDiff == 0) return 0.0;
+        return (double) yDiff / xDiff;
     }
 
     /**
@@ -67,7 +71,11 @@ public class Point {
      *         argument point
      */
     public int compareTo(Point that) {
-        /* YOUR CODE HERE */
+        if (y > that.y) return 1;
+        if (y < that.y) return -1;
+        if (x > that.x) return 1;
+        if (x < that.x) return -1;
+        return 0;
     }
 
     /**
@@ -77,7 +85,18 @@ public class Point {
      * @return the Comparator that defines this ordering on points
      */
     public Comparator<Point> slopeOrder() {
-        /* YOUR CODE HERE */
+        return new SlopeOrder();
+    }
+
+    private class SlopeOrder implements Comparator<Point> {
+        @Override
+        public int compare(Point o1, Point o2) {
+            double slope1 = slopeTo(o1);
+            double slope2 = slopeTo(o2);
+            if (slope1 > slope2) return 1;
+            if (slope1 < slope2) return -1;
+            return 0;
+        }
     }
 
 
